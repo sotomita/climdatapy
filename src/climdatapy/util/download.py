@@ -14,8 +14,7 @@ def download_noauth(
     url: str,
     save_fpath: Path,
     chunk_size: int = 8192,
-    sleep_time: float = 1.0,
-    exist_skip: bool = False,
+    sleep_time: float = 2.0,
     **kwargs,
 ) -> None:
     """
@@ -67,6 +66,6 @@ def download(
         return
     else:
         if download_method == "util_url_noauth":
-            download_noauth(url, save_fpath, exist_skip=exist_skip, **kwargs)
+            download_noauth(url, save_fpath, **kwargs)
         else:
             raise ValueError(f'download_method "{download_method}" is invalid')

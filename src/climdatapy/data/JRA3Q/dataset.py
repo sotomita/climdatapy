@@ -49,6 +49,7 @@ class JRA3Q(Dataset):
                                 "data_kind": data_kind,
                                 "near_realtime": near_realtime,
                                 "std": False,
+                                "var": None,
                             }
                         )
                         if download_kw["std"]:
@@ -58,6 +59,7 @@ class JRA3Q(Dataset):
                                     "data_kind": data_kind,
                                     "near_realtime": near_realtime,
                                     "std": True,
+                                    "var": None,
                                 }
                             )
                     else:
@@ -95,6 +97,7 @@ class JRA3Q(Dataset):
         data_dir: Path,
         exist_ok: bool = False,
     ) -> None:
+
         dl.jra3Q_download(
             request_kw["stats_type"],
             request_kw["data_kind"],

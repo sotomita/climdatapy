@@ -207,7 +207,7 @@ marimo/_lsp/
 __marimo__/
 
 # Tmp files
-#tmp
+tmp
 
 # data files
 *nc
@@ -217,3 +217,7 @@ __marimo__/
 *.bin
 *.csv
 *.CSV
+
+# log files
+*.log
+log.*

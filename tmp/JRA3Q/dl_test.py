@@ -8,7 +8,7 @@ from climdatapy.data import JRA3Q
 manager = JRA3Q()
 
 start_time = datetime(2025, 1, 1)
-end_time = datetime(2025, 3, 1)
+end_time = datetime(2025, 2, 1)
 download_kw = {
     "stats_type": ["all"],
     "data_kind": ["all"],
@@ -19,11 +19,13 @@ download_kw = {
 }
 
 data_dir = Path("./data")
+log_file_path = Path("./jra3q.log")
 
 manager.download(
     start_time,
     end_time,
     download_kw,
     data_dir,
-    exist_ok=True,
+    log_file_path,
+    exist_ok=False,
 )
