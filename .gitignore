@@ -221,5 +221,4 @@ tmp
 
 # log files
 *.log
-log.*
 nohup.out
