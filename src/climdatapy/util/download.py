@@ -2,19 +2,25 @@
 
 from pathlib import Path
 import requests
-from requests.exceptions import HTTPError, ChunkedEncodingError
+from requests.exceptions import (
+    HTTPError,
+    ChunkedEncodingError,
+    ConnectionError,
+    ReadTimeout,
+)
 import time
 import warnings
+import logging
 
 
-MAX_TRIAL = 3
+MAX_TRIAL = 10
 
 
 def download_noauth(
     url: str,
     save_fpath: Path,
     chunk_size: int = 8192,
-    sleep_time: float = 2.0,
+    sleep_time: float = 5.0,
     **kwargs,
 ) -> None:
     """
@@ -38,18 +44,29 @@ def download_noauth(
 
     for i in range(MAX_TRIAL):
         try:
-            with requests.get(url, stream=True) as r:
+            with requests.get(url, stream=True, timeout=60) as r:
                 r.raise_for_status()
                 with open(save_fpath, "wb") as f:
                     for chunk in r.iter_content(chunk_size=chunk_size):
                         if chunk:
                             f.write(chunk)
+
+            logging.info(f"{url} ==> {save_fpath}")
             break
         except HTTPError:
             warnings.warn(f'HTTP Error while downloading "{url}".', stacklevel=4)
+        except ConnectionError:
+            warnings.warn(f'ConnectionError while downloading "{url}".', stacklevel=4)
+        except ReadTimeout:
+            warnings.warn(f'Read Timeout while downloading "{url}".', stacklevel=4)
         except ChunkedEncodingError as e:
-            if i == 2:
-                raise
+            warnings.warn(
+                f'ChunkedEncodingError while downloading "{url}".', stacklevel=4
+            )
+
+        if i == MAX_TRIAL - 1:
+            save_fpath.unlink(missing_ok=True)
+
     time.sleep(sleep_time)
 
 

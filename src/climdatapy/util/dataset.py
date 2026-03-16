@@ -2,7 +2,6 @@
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-import logging
 from pathlib import Path
 from typing import Any
 from tqdm import tqdm
@@ -49,11 +48,8 @@ class Dataset(ABC):
 
         request_kw_list = self.get_request_key(download_kw)
 
-        for i, request_kw in enumerate(request_kw_list):
-
-            code = self.dl_file(start_time, end_time, request_kw, data_dir, exist_ok)
-            if code is None:
-                logging.info(f"[{i+1:8d}/{len(request_kw_list)}]")
+        for request_kw in tqdm(request_kw_list):
+            self.dl_file(start_time, end_time, request_kw, data_dir, exist_ok)
 
     @abstractmethod
     def get_newest_time(self, request_kw: dict[str, list[Any]]) -> datetime:

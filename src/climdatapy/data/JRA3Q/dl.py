@@ -36,7 +36,8 @@ def __get_file_name(
         start_date = datetime(year, month, 1, 0)
     tail_date = get_tail_time(year, month, **kwargs)
 
-    mn_or_std = "sd" if std else "mn"
+    mn_or_std = "-sd" if std else "mn"
+
     code = code_dict[data_kind][var]
 
     if stats_type == "instant":
@@ -87,7 +88,7 @@ def __get_file_name_nrtime(
         elif stats_type == "diurnal":
             __time = f"{year:04}{month:02}_{hour:02}"
 
-    mn_or_std = "_sd" if std else ""
+    mn_or_std = "-sd" if std else ""
 
     return f"{data_kind}{__var}{mn_or_std}.{__time}"
 
@@ -284,10 +285,11 @@ def get_time_list(
 
 
 def jra3Q_download(
-    stats_type: str | list[str],
-    data_kind: str | list[str],
-    var: str | list[str],
-    near_real_time: bool | str,
+    stats_type: str,
+    data_kind: str,
+    var: str,
+    near_real_time: bool,
+    std: bool,
     start_time: datetime,
     end_time: datetime,
     base_dir: Path,
@@ -295,79 +297,39 @@ def jra3Q_download(
     **kwargs,
 ) -> None:
 
-    download_list = []
+    time_list = get_time_list(
+        stats_type, data_kind, start_time, end_time, near_real_time
+    )
 
-    if stats_type == "all":
-        stats_type_list = ["instant", "monthly", "diurnal"]
-    else:
-        stats_type_list = stats_type if isinstance(stats_type, list) else [stats_type]
+    for time in time_list:
 
-    if data_kind == "all":
-        data_kind_list = code_dict.keys()
-    else:
-        data_kind_list = data_kind if isinstance(data_kind, list) else [data_kind]
+        url = get_url(
+            stats_type,
+            data_kind,
+            var,
+            time.year,
+            time.month,
+            time.day,
+            time.hour,
+            std,
+            near_real_time,
+        )
+        save_fpath = get_save_fpath(
+            base_dir,
+            stats_type,
+            data_kind,
+            var,
+            time.year,
+            time.month,
+            time.day,
+            time.hour,
+            std,
+            near_real_time,
+        )
 
-    if near_real_time == "all":
-        near_real_time_list = [True, False]
-    else:
-        near_real_time_list = [True] if near_real_time else [False]
-
-    for data_kind in data_kind_list:
-        for stats_type in stats_type_list:
-
-            if (data_kind == "anl_snow125") and (stats_type in ["monthly", "diurnal"]):
-                continue
-
-            if var == "all":
-                var_list = code_dict[data_kind].keys()
-            else:
-                var_list = var if isinstance(var, list) else [var]
-                var_list = [
-                    var for var in var_list if var in code_dict[data_kind].keys()
-                ]
-
-            for __var in var_list:
-                for __near_real_time in near_real_time_list:
-                    time_list = get_time_list(
-                        stats_type, data_kind, start_time, end_time, __near_real_time
-                    )
-
-                    for time in time_list:
-
-                        if stats_type in ["monthly", "diurnal"]:
-                            sd_list = [False, True]
-                        else:
-                            sd_list = [False]
-
-                        for __sd in sd_list:
-
-                            url = get_url(
-                                stats_type,
-                                data_kind,
-                                __var,
-                                time.year,
-                                time.month,
-                                time.day,
-                                time.hour,
-                                __sd,
-                                __near_real_time,
-                            )
-                            save_fpath = get_save_fpath(
-                                base_dir,
-                                stats_type,
-                                data_kind,
-                                __var,
-                                time.year,
-                                time.month,
-                                time.day,
-                                time.hour,
-                                __sd,
-                                __near_real_time,
-                            )
-
-                            download(
-                                url,
-                                save_fpath,
-                                download_method="util_url_noauth",
-                                exist_skip=exist_skip,
-                            )
+        download(
+            url,
+            save_fpath,
+            download_method="util_url_noauth",
+            exist_skip=exist_skip,
+        )

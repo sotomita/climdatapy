@@ -36,23 +36,51 @@ class JRA3Q(Dataset):
             # 瞬間値 or 統計値
             for data_kind in download_kw["data_kind"]:
                 # 解析値 or 予報値, 解像度
+
                 # 瞬間値以外の積雪データは飛ばす
                 if (data_kind == "anl_snow125") and (stats_type != "instant"):
                     continue
                 for near_realtime in download_kw["near_realtime"]:
                     # 全期間 or 準リアルタイム
+
+                    if near_realtime and data_kind in [
+                        "anl_surf125",
+                        "anl_land125",
+                        "anl_snow125",
+                    ]:
+                        var_list = [None]
+                    elif "all" in download_kw["var"]:
+                        var_list = list(code_dict[data_kind].keys())
+                    else:
+                        var_list = download_kw["var"]
+
                     if near_realtime:
                         # 準リアルタイム
-                        request_key_list.append(
-                            {
-                                "stats_type": stats_type,
-                                "data_kind": data_kind,
-                                "near_realtime": near_realtime,
-                                "std": False,
-                                "var": None,
-                            }
-                        )
-                        if download_kw["std"]:
+
+                        for var in var_list:
+
+                            if data_kind == "anl_p125" and isinstance(var, str):
+                                __var = var.replace("-pres", "")
+                            elif data_kind == "anl_isentrop125" and isinstance(
+                                var, str
+                            ):
+                                __var = var.replace("-theta", "")
+                            else:
+                                __var = var
+
+                            request_key_list.append(
+                                {
+                                    "stats_type": stats_type,
+                                    "data_kind": data_kind,
+                                    "near_realtime": near_realtime,
+                                    "std": False,
+                                    "var": __var,
+                                }
+                            )
+                        if download_kw["std"] and download_kw["stats_type"] in [
+                            "monthly",
+                            "diurnal",
+                        ]:
                             request_key_list.append(
                                 {
                                     "stats_type": stats_type,
@@ -64,9 +92,9 @@ class JRA3Q(Dataset):
                             )
                     else:
                         # 全期間
-                        if "all" in download_kw["var"]:
-                            download_kw["var"] = list(code_dict[data_kind].keys())
-                        for var in download_kw["var"]:
+
+                        for var in var_list:
+
                             request_key_list.append(
                                 {
                                     "stats_type": stats_type,
@@ -76,7 +104,10 @@ class JRA3Q(Dataset):
                                     "std": False,
                                 }
                             )
-                            if download_kw["std"]:
+                            if download_kw["std"] and download_kw["stats_type"] in [
+                                "monthly",
+                                "diurnal",
+                            ]:
                                 request_key_list.append(
                                     {
                                         "stats_type": stats_type,
@@ -103,6 +134,7 @@ class JRA3Q(Dataset):
             request_kw["data_kind"],
             request_kw["var"],
             request_kw["near_realtime"],
+            request_kw["std"],
             start_time,
             end_time,
             data_dir,
