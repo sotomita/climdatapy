@@ -77,6 +77,24 @@ def download(
     exist_skip: bool = False,
     **kwargs,
 ) -> None:
+    """HTTPダウンロード用共通wrapper
+
+    Parameters
+    ----------
+    url : str
+        公開ファイルのURL
+    save_fpath : Path
+        保存するファイルのファイルパス
+    download_method : str
+        downloadの方法。
+    exist_skip : bool, optional
+        Trueならば、ファイルが存在する場合はスキップ, by default False
+
+    Raises
+    ------
+    ValueError
+        存在しないdownload_methodを指定した場合,Error.
+    """
 
     # file existence check
     if exist_skip and save_fpath.exists():

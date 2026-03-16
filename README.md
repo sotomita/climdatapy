@@ -15,9 +15,9 @@ $ pip install climdatapy
 
 ## Usage
 ### CLI
-```climdata```コマンドでデータセットを管理します。
+```climdata```コマンドでデータセットを管理する。
 #### ダウンロード可能データセットを表示
-```climdata list```
+```$ climdata list```
 #### データセットをダウンロード
 (例) 2024年1月1日から1月2日までのJRA3Qデータをダウンロードする。
 ```
