@@ -128,11 +128,36 @@ class JRA3Q(Dataset):
 
         return request_key_list
 
+    def get_request_time_range(
+        self, start_time: datetime, end_time: datetime, request_kw: dict[str, Any]
+    ) -> tuple[datetime, datetime]:
+
+        if request_kw["near_realtime"]:
+            min_start_time = datetime(datetime.now().year - 2, 1, 1, 0)
+        else:
+            min_start_time = datetime(1947, 9, 1, 0)
+
+        request_start_time = (
+            start_time if min_start_time < start_time else min_start_time
+        )
+
+        last_time = self.get_newest_time(request_kw)
+        if end_time < request_start_time:
+            request_end_time = request_start_time
+        elif end_time > last_time:
+            request_end_time = last_time
+
+        else:
+            request_end_time = end_time
+
+        return request_start_time, request_end_time
+
     def get_all_download_key(self) -> dict[str, list[Any]]:
+
         return {
             "stats_type": ["all"],
             "data_kind": ["all"],
-            "near_realtime": ["true"],
+            "near_realtime": ["all"],
             "stats_type": ["all"],
             "std": ["true"],
             "var": ["all"],
