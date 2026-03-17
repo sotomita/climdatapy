@@ -140,9 +140,15 @@ class JRA3Q(Dataset):
         request_start_time = (
             start_time if min_start_time < start_time else min_start_time
         )
-        request_end_time = (
-            end_time if end_time > request_start_time else request_start_time
-        )
+
+        last_time = self.get_newest_time(request_kw)
+        if end_time < request_start_time:
+            request_end_time = request_start_time
+        elif end_time > last_time:
+            request_end_time = last_time
+
+        else:
+            request_end_time = end_time
 
         return request_start_time, request_end_time
 
