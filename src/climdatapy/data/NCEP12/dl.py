@@ -6,7 +6,7 @@ from pathlib import Path
 from ...util import download
 
 
-prs_vars = [
+prs_vars_re1 = [
     "air",
     "hgt",
     "omega",
@@ -15,8 +15,7 @@ prs_vars = [
     "uwnd",
     "vwnd",
 ]
-
-srf_vars = [
+srf_vars_re1 = [
     "air.sig995",
     "omega.sig995",
     "pottmp.sig995",
@@ -26,6 +25,19 @@ srf_vars = [
     "slp",
     "uwnd.sig995",
     "vwnd.sig995",
+]
+prs_vars_re2 = [
+    "air",
+    "hgt",
+    "omega",
+    "rhum",
+    "uwnd",
+    "vwnd",
+]
+srf_vars_re2 = [
+    "mslp",
+    "pr_wtr.eatm",
+    "pres.sfc",
 ]
 
 

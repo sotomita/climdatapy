@@ -6,7 +6,7 @@
 
 [![Publish to PyPI](https://github.com/sotomita/climdatapy/actions/workflows/publish.yml/badge.svg)](https://github.com/sotomita/climdatapy/actions/workflows/publish.yml)
 
-気象・海洋のデータセットをダウンロードするCLI/Pythonパッケージ。- [climdatapy](#climdatapy)
+気象・海洋のデータセットをダウンロードするCLI/Pythonパッケージ。
 - [1. climdatapy](#1-climdatapy)
 - [2. Installation](#2-installation)
 - [3. Usage](#3-usage)
@@ -147,6 +147,8 @@ manager.update(
 |---|---|---|
 |JRA3Q|[NCAR GDEX](https://gdex.ucar.edu/)|[詳細](./doc/JRA3Q.md)|
 |NCEP Reanalysis1|[京大生存研DB](https://database.rish.kyoto-u.ac.jp/arch/ncep/)|[詳細](./doc/NCEP1.md)|
+|NCEP Reanalysis2|[京大生存研DB](https://database.rish.kyoto-u.ac.jp/arch/ncep/)|[詳細](./doc/NCEP2.md)|
+
 引用や謝辞等の規定はsourceを参照してください。
 
 
