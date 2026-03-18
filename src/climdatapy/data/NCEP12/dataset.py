@@ -16,6 +16,7 @@ class NCEP1(Dataset):
         self.ncep12_short_name = "Reanalysis1"
         self.prs_vars = dl.prs_vars_re1
         self.srf_vars = dl.srf_vars_re1
+        self.ncep12_min_time = datetime(1948, 1, 1)
 
     def get_request_key(
         self, download_kw: dict[str, list[str]], **kwargs
@@ -50,7 +51,7 @@ class NCEP1(Dataset):
         self, start_time: dl.datetime, end_time: dl.datetime, request_kw: dict[str, Any]
     ) -> tuple[datetime, datetime]:
 
-        min_start_time = datetime(1948, 1, 1)
+        min_start_time = self.ncep12_min_time
         max_end_time = datetime.now() - timedelta(days=5)
 
         request_start_time = (
@@ -108,3 +109,4 @@ class NCEP2(NCEP1):
         self.ncep12_short_name = "Reanalysis2"
         self.prs_vars = dl.prs_vars_re2
         self.srf_vars = dl.srf_vars_re2
+        self.ncep12_min_time = datetime(1979, 1, 1)
