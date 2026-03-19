@@ -151,6 +151,8 @@ manager.update(
 |OISST|[NOAA NCEI](https://www.ncei.noaa.gov/products/optimum-interpolation-sst)|[詳細](./doc/OISST.md)|
 |COBESST|[JMA NEAR-GOOS](https://ds.data.jma.go.jp/goos/data/rrtdb/jma-pro/cobe2_sst_glb_M.html)|[詳細](./doc/COBESST.md)|
 |HIMSST|[JMA NEAR-GOOS](https://ds.data.jma.go.jp/goos/data/rrtdb/jma-pro/him_sst_pac_D.html)|[詳細](./doc/HIMSST.md)|
+|MGDSST|[JMA NEAR-GOOS](https://ds.data.jma.go.jp/goos/data/rrtdb/jma-pro/mgd_sst_glb_D.html)|[詳細](./doc/MGDSST.md)|
+
 
 各データ使用の際の引用や謝辞等の規定はsourceを参照してください。
 
