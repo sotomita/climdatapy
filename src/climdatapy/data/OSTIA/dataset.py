@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -7,12 +8,12 @@ from ...util import Dataset
 from . import dl
 
 
-class HIMSST(Dataset):
+class OSTIA(Dataset):
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.min_time = datetime(2017, 2, 1)
+        self.min_time = datetime(2024, 3, 19, 12)
 
     def get_request_key(
         self, download_kw: dict[str, list[str]], **kwargs
@@ -25,7 +26,7 @@ class HIMSST(Dataset):
     ) -> tuple[datetime, datetime]:
 
         min_start_time = self.min_time
-        max_end_time = datetime.now() - timedelta(days=1)
+        max_end_time = datetime.now() - timedelta(days=16)
 
         request_start_time = (
             start_time if min_start_time < start_time else min_start_time
@@ -54,12 +55,7 @@ class HIMSST(Dataset):
         exist_ok: bool = False,
     ) -> None:
 
-        dl.himsst_download(
-            start_time,
-            end_time,
-            data_dir,
-            exist_ok,
-        )
+        dl.ostia_download(start_time, end_time, data_dir, exist_ok)
 
     def get_newest_time(self, request_kw: dict[str, list[Any]]) -> datetime:
-        return datetime.now() - timedelta(days=1)
+        return datetime.now() - timedelta(days=2)

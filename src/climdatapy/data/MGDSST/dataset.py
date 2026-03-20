@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -7,12 +8,12 @@ from ...util import Dataset
 from . import dl
 
 
-class HIMSST(Dataset):
+class MGDSST(Dataset):
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.min_time = datetime(2017, 2, 1)
+        self.min_time = datetime(1982, 1, 1)
 
     def get_request_key(
         self, download_kw: dict[str, list[str]], **kwargs
@@ -54,7 +55,7 @@ class HIMSST(Dataset):
         exist_ok: bool = False,
     ) -> None:
 
-        dl.himsst_download(
+        dl.mgdsst_download(
             start_time,
             end_time,
             data_dir,
@@ -62,4 +63,4 @@ class HIMSST(Dataset):
         )
 
     def get_newest_time(self, request_kw: dict[str, list[Any]]) -> datetime:
-        return datetime.now() - timedelta(days=1)
+        return datetime.now() - timedelta(days=300)
