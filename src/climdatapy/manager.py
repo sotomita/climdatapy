@@ -12,6 +12,7 @@ DATASET_REGISTRY = {
     "HIMSST": data.HIMSST,
     "MGDSST": data.MGDSST,
     "OSTIA": data.OSTIA,
+    "AMeDAS": data.AMeDAS,
 }
 
 
