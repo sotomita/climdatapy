@@ -1,4 +1,3 @@
-#! /usr/bin/env python3
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -7,23 +6,24 @@ from ...util import Dataset
 from . import dl
 
 
-class HadISST(Dataset):
-
+class COBESST(Dataset):
     def __init__(self) -> None:
         super().__init__()
-        # HadISSTは1870年1月からデータが提供されています
-        self.min_time = datetime(1870, 1, 1)
+
+        self.min_time = datetime(1850, 1, 1)
 
     def get_request_key(
         self, download_kw: dict[str, list[str]], **kwargs
     ) -> list[dict[str, Any]]:
+
         return [{"": None}]
 
     def get_request_time_range(
         self, start_time: datetime, end_time: datetime, request_kw: dict[str, Any]
     ) -> tuple[datetime, datetime]:
+
         min_start_time = self.min_time
-        max_end_time = datetime.now() - timedelta(days=1)
+        max_end_time = datetime.now() - timedelta(days=16)
 
         request_start_time = (
             start_time if min_start_time < start_time else min_start_time
@@ -33,12 +33,14 @@ class HadISST(Dataset):
             request_end_time = request_start_time
         elif end_time > max_end_time:
             request_end_time = max_end_time
+
         else:
             request_end_time = end_time
 
         return request_start_time, request_end_time
 
     def get_all_download_key(self) -> dict[str, list[str]]:
+
         return {"": [""]}
 
     def dl_file(
@@ -49,8 +51,8 @@ class HadISST(Dataset):
         data_dir: Path,
         exist_ok: bool = False,
     ) -> None:
-        # 先ほど dl.py で作成した hadisst_download 関数を呼び出します
-        dl.hadisst_download(
+
+        dl.cobesst_download(
             start_time,
             end_time,
             data_dir,
@@ -58,4 +60,4 @@ class HadISST(Dataset):
         )
 
     def get_newest_time(self, request_kw: dict[str, list[Any]]) -> datetime:
-        return datetime.now() - timedelta(days=1)
+        return datetime.now() - timedelta(days=90)
