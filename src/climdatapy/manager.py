@@ -13,7 +13,7 @@ DATASET_REGISTRY = {
     "MGDSST": data.MGDSST,
     "MODIS": data.MODIS,
     "OSTIA": data.OSTIA,
-    "AMeDAS": data.AMeDAS,
+    "HadISST": data.HadISST,
 }
 
 
