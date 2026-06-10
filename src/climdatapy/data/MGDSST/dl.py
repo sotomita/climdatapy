@@ -11,21 +11,19 @@ import warnings
 import logging
 import requests
 
-from ...util import read_as_str
 
-
-def get_url(time: datetime) -> str:
+def get_url(time: datetime, re: bool = True) -> str:
 
     return (
         f"https://www.data.jma.go.jp/goos/data/pub/JMA-product/mgd_sst_glb_D/{time:%Y}/"
-        f"re_mgd_sst_glb_D{time:%Y%m%d}.txt.gz"
+        f"{'re_' if re else ''}mgd_sst_glb_D{time:%Y%m%d}.txt.gz"
     )
 
 
-def get_save_fpath(time: datetime, data_dir: Path) -> Path:
+def get_save_fpath(time: datetime, data_dir: Path, re: bool = True) -> Path:
 
     return data_dir / Path(
-        f"MGDSST/Daily/{time:%Y}/{time:%Y%m}/re_mgd_sst_glb_D{time:%Y%m%d}.nc"
+        f"MGDSST/Daily/{time:%Y}/{time:%Y%m}/{'re_' if re else ''}mgd_sst_glb_D{time:%Y%m%d}.nc"
     )
 
 
@@ -34,6 +32,7 @@ def mgdsst_download(
     end_time: datetime,
     data_dir: Path,
     exist_skip: bool = False,
+    re: bool = True,
 ) -> None:
 
     time_list = []
@@ -44,8 +43,8 @@ def mgdsst_download(
 
     for time in time_list:
 
-        url = get_url(time)
-        save_fpath = get_save_fpath(time, data_dir)
+        url = get_url(time, re=re)
+        save_fpath = get_save_fpath(time, data_dir, re=re)
         save_fpath.parent.mkdir(parents=True, exist_ok=True)
 
         r = requests.get(url, stream=True)
@@ -60,7 +59,7 @@ def mgdsst_download(
         text: str = gzip.decompress(r.content).decode("utf-8")
 
         f = io.StringIO(text)
-        with f as file:
+        with f:
             df = pd.read_fwf(f, widths=[3] * 1440, nrows=720, header=None)
             arr = df.apply(pd.to_numeric, errors="coerce").to_numpy(dtype=float).copy()
             ice = (arr == 888).astype(int)

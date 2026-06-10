@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from pathlib import Path
 from typing import Any
 
@@ -62,4 +62,11 @@ class HIMSST(Dataset):
         )
 
     def get_newest_time(self, request_kw: dict[str, list[Any]]) -> datetime:
-        return datetime.now() - timedelta(days=1)
+
+        now_time = datetime.now(UTC).replace(tzinfo=None)
+        if now_time.hour >= 10:
+            newest_time = datetime.now() - timedelta(days=1)
+        else:
+            newest_time = datetime.now() - timedelta(days=2)
+
+        return newest_time

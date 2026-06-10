@@ -41,7 +41,6 @@
     - [3.2.4. ```update_all```メソッド](#324-update_allメソッド)
   - [3.3. ```.climdatarc```](#33-climdatarc)
   - [3.4. サンプルスクリプト](#34-サンプルスクリプト)
-- [4. Author](#4-author)
 
 
 # 2. Installation
@@ -183,5 +182,3 @@ manager.update(
 |[```sample/update_JRA3Q.py```](./sample/update_JRA3Q.py)|JRA3Qの更新|
 |[```sample/download_MODIS.py```](./sample/download_MODIS.py)|MODISのダウンロード|
 |[```sample/update_MODIS.py```](./sample/update_MODIS.py)|MODISの更新|
-# 4. Author
-- [So Tomita](https://github.com/sotomita)

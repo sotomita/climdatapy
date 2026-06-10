@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from pathlib import Path
 from typing import Any
 
@@ -19,7 +19,14 @@ class MGDSST(Dataset):
         self, download_kw: dict[str, list[str]], **kwargs
     ) -> list[dict[str, Any]]:
 
-        return [{"": None}]
+        request_key_list = []
+        if "all" in download_kw["re"]:
+            download_kw["re"] = ["True", "False"]
+
+        for re in download_kw["re"]:
+            request_key_list.append({"re": re})
+
+        return request_key_list
 
     def get_request_time_range(
         self, start_time: datetime, end_time: datetime, request_kw: dict[str, Any]
@@ -55,12 +62,26 @@ class MGDSST(Dataset):
         exist_ok: bool = False,
     ) -> None:
 
+        re = request_kw.get("re", "True") == "True"
+
         dl.mgdsst_download(
             start_time,
             end_time,
             data_dir,
             exist_ok,
+            re=re,
         )
 
     def get_newest_time(self, request_kw: dict[str, list[Any]]) -> datetime:
-        return datetime.now() - timedelta(days=300)
+
+        re = request_kw.get("re", True)
+        if re:
+            return datetime.now() - timedelta(days=300)
+        else:
+            now_time = datetime.now(UTC).replace(tzinfo=None)
+            if now_time.hour >= 10:
+                newest_time = datetime.now() - timedelta(days=1)
+            else:
+                newest_time = datetime.now() - timedelta(days=2)
+
+            return newest_time
