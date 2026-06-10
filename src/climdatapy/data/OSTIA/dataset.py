@@ -26,7 +26,7 @@ class OSTIA(Dataset):
     ) -> tuple[datetime, datetime]:
 
         min_start_time = self.min_time
-        max_end_time = datetime.now() - timedelta(days=16)
+        max_end_time = datetime.now() - timedelta(hours=12)
 
         request_start_time = (
             start_time if min_start_time < start_time else min_start_time
@@ -58,4 +58,4 @@ class OSTIA(Dataset):
         dl.ostia_download(start_time, end_time, data_dir, exist_ok)
 
     def get_newest_time(self, request_kw: dict[str, list[Any]]) -> datetime:
-        return datetime.now() - timedelta(days=2)
+        return datetime.now() - timedelta(hours=12)
