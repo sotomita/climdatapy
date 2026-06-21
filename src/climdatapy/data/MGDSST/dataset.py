@@ -13,8 +13,6 @@ class MGDSST(Dataset):
     def __init__(self) -> None:
         super().__init__()
 
-        self.min_time = datetime(1982, 1, 1)
-
     def get_request_key(
         self, download_kw: dict[str, list[str]], **kwargs
     ) -> list[dict[str, Any]]:
@@ -32,8 +30,16 @@ class MGDSST(Dataset):
         self, start_time: datetime, end_time: datetime, request_kw: dict[str, Any]
     ) -> tuple[datetime, datetime]:
 
-        min_start_time = self.min_time
-        max_end_time = datetime.now() - timedelta(days=1)
+        re = request_kw.get("re", "True") == "True"
+
+        if re:
+            pass
+            min_start_time = datetime(1982, 1, 1)
+            max_end_time = datetime.now() - timedelta(days=300)
+        else:
+
+            min_start_time = datetime.now() - timedelta(days=299)
+            max_end_time = datetime.now() - timedelta(days=1)
 
         request_start_time = (
             start_time if min_start_time < start_time else min_start_time
@@ -51,7 +57,7 @@ class MGDSST(Dataset):
 
     def get_all_download_key(self) -> dict[str, list[str]]:
 
-        return {"": [""]}
+        return {"re": ["all"]}
 
     def dl_file(
         self,
@@ -74,11 +80,11 @@ class MGDSST(Dataset):
 
     def get_newest_time(self, request_kw: dict[str, list[Any]]) -> datetime:
 
-        re = request_kw.get("re", True)
+        re = request_kw.get("re", "True") == "True"
         if re:
             return datetime.now() - timedelta(days=300)
         else:
-            now_time = datetime.now(UTC).replace(tzinfo=None)
+            now_time = datetime.now()
             if now_time.hour >= 10:
                 newest_time = datetime.now() - timedelta(days=1)
             else:
